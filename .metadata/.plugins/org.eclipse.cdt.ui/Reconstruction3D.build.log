@@ -1,6 +1,15 @@
-08:03:10 **** Incremental Build of configuration Debug for project Reconstruction3D ****
+10:15:23 **** Incremental Build of configuration Debug for project Reconstruction3D ****
 make all 
-make: Nothing to be done for 'all'.
+Building file: ../src/main.cpp
+Invoking: GCC C++ Compiler
+g++ -I"/media/fdbo/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/main.d" -MT"src/main.o" -o "src/main.o" "../src/main.cpp"
+Finished building: ../src/main.cpp
+ 
+Building target: Reconstruction3D
+Invoking: GCC C++ Linker
+g++  -o "Reconstruction3D"  ./src/main.o   
+Finished building target: Reconstruction3D
+ 
 
-08:03:10 Build Finished. 0 errors, 0 warnings. (took 191ms)
+10:15:25 Build Finished. 0 errors, 0 warnings. (took 2s.98ms)
 
