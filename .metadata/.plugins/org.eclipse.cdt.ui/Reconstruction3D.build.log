@@ -1,0 +1,6 @@
+08:03:10 **** Incremental Build of configuration Debug for project Reconstruction3D ****
+make all 
+make: Nothing to be done for 'all'.
+
+08:03:10 Build Finished. 0 errors, 0 warnings. (took 191ms)
+
