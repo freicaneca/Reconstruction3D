@@ -35,14 +35,45 @@ class FCalculator{
 
         
         sort(matches.begin(), matches.end());
+
         
         const int numGoodMatches = matches.size()*0.3;
         matches.erase(matches.begin()+numGoodMatches, matches.end());
+
+        std::vector<Point2f> points1, points2;
+
+        for( size_t i = 0; i < matches.size(); i++ )
+        {
+          points1.push_back( keypoints1[ matches[i].queryIdx ].pt );
+          points2.push_back( keypoints2[ matches[i].trainIdx ].pt );
+        }
+
+        for( size_t i = 0; i < points1.size(); i++ )
+        {
+          printf("oi");
+        }
+        Mat F;
+
+
+
+        F = findFundamentalMat(Mat(points1),Mat(points2));
+
+        std::vector<cv::Vec<float,3>> epilines1, epilines2;
+        std::vector<Point2f> newPoints1, newPoints2;
+
+        correctMatches(F,points1,points2,newPoints1,newPoints2);
+
+        computeCorrespondEpilines(newPoints1, 1, F, epilines1);
+        computeCorrespondEpilines(newPoints2, 2, F, epilines2);
+
         
 
-        Mat imMatches;
-        drawMatches(im1, keypoints1, im2, keypoints2, matches, imMatches);
-        imwrite("matches.jpg", imMatches);
+
+
+
+
+
+
 
 
 
