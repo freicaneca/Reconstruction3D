@@ -23,15 +23,16 @@ public:
 	EpipolarGeometry();
 	~EpipolarGeometry();
 	void CalculateFundamentalMatrix();
+	void AddImage(const std::string filename);
 	cv::Mat GetF();
 	cv::Mat GetEpipole1();
 	cv::Mat GetEpipole2();
-	cv::Mat GetEpiLine1(cv::Point2d* p);
-	cv::Mat GetEpiLine2(cv::Point2d* p);
+	cv::Mat GetEpiLine1(const cv::Point2d* p);
+	cv::Mat GetEpiLine2(const cv::Point2d* p);
 	std::vector<cv::Mat> GetPairOfProjectionMatrices();
-	void SetKeyPoints(std::vector<cv::KeyPoint>* kp1, std::vector<cv::KeyPoint>* kp2);
-	void SetDescriptors(cv::Mat* d1, cv::Mat* d2);
-	void SetFeatures2DAlgorithm(cv::Feature2D* alg);
+	void SetKeyPoints(const std::vector<cv::KeyPoint>* kp1, const std::vector<cv::KeyPoint>* kp2);
+	void SetDescriptors(cv::InputArrayOfArrays d1, cv::InputArrayOfArrays d2);
+	void SetFeatures2DAlgorithm(const cv::Feature2D* alg);
 
 private:
 
