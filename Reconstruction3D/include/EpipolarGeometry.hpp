@@ -14,7 +14,7 @@
 #ifndef INCLUDE_EPIPOLARGEOMETRY_HPP_
 #define INCLUDE_EPIPOLARGEOMETRY_HPP_
 
-#include <opencv/cv.hpp>
+#include "opencv/cv.hpp"
 
 class EpipolarGeometry
 {

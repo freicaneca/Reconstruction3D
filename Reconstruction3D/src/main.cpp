@@ -15,7 +15,8 @@
  *  7- Reconstrucao afim ou metrica (extra).
  */
 #include <iostream>
-#include <opencv/cv.hpp>
+//#include <opencv/cv.hpp>
+#include "opencv/cv.hpp"
 #include <vector>
 
 int main()

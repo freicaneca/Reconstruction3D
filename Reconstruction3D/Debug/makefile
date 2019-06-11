@@ -44,7 +44,7 @@ all: Reconstruction3D
 Reconstruction3D: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++  -o "Reconstruction3D" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/home/CIN/fdbo/local/lib -o "Reconstruction3D" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

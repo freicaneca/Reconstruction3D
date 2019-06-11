@@ -1,4 +1,5 @@
-src/main.o: ../src/main.cpp /home/CIN/fdbo/local/include/opencv/cv.hpp \
+src/featureMatching.o: ../src/featureMatching.cpp \
+ /home/CIN/fdbo/local/include/opencv/cv.hpp \
  /home/CIN/fdbo/local/include/opencv/cv.h \
  /home/CIN/fdbo/local/include/opencv2/core/core_c.h \
  /home/CIN/fdbo/local/include/opencv2/core/types_c.h \
@@ -50,7 +51,9 @@ src/main.o: ../src/main.cpp /home/CIN/fdbo/local/include/opencv/cv.hpp \
  /home/CIN/fdbo/local/include/opencv2/core/affine.hpp \
  /home/CIN/fdbo/local/include/opencv2/calib3d/calib3d_c.h \
  /home/CIN/fdbo/local/include/opencv2/objdetect.hpp \
- /home/CIN/fdbo/local/include/opencv2/objdetect/detection_based_tracker.hpp
+ /home/CIN/fdbo/local/include/opencv2/objdetect/detection_based_tracker.hpp \
+ /home/CIN/fdbo/local/include/opencv2/xfeatures2d.hpp \
+ /home/CIN/fdbo/local/include/opencv2/xfeatures2d/nonfree.hpp
 
 /home/CIN/fdbo/local/include/opencv/cv.hpp:
 
@@ -157,3 +160,7 @@ src/main.o: ../src/main.cpp /home/CIN/fdbo/local/include/opencv/cv.hpp \
 /home/CIN/fdbo/local/include/opencv2/objdetect.hpp:
 
 /home/CIN/fdbo/local/include/opencv2/objdetect/detection_based_tracker.hpp:
+
+/home/CIN/fdbo/local/include/opencv2/xfeatures2d.hpp:
+
+/home/CIN/fdbo/local/include/opencv2/xfeatures2d/nonfree.hpp:
