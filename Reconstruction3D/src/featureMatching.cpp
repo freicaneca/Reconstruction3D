@@ -107,7 +107,7 @@ int main_featureMatching()
   test.extractAndMatch();
 
 
-  return;
+  return 0;
 
    
 
