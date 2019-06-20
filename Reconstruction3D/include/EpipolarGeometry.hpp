@@ -15,6 +15,8 @@
 #define INCLUDE_EPIPOLARGEOMETRY_HPP_
 
 #include "opencv/cv.hpp"
+#include <vector>
+#include <iostream>
 
 class EpipolarGeometry
 {
@@ -29,12 +31,23 @@ public:
 	cv::Mat GetEpipole2();
 	cv::Mat GetEpiLine1(const cv::Point2d* p);
 	cv::Mat GetEpiLine2(const cv::Point2d* p);
+
+	// Normalizacao: retorna homografia 3x3 que realiza normalização dos pontos de entrada. A normalização consiste na
+	// translação dos pontos ao redor da origem (centroide é o vetor nulo) e a distância média dos pontos à origem é sqrt(2).
+	cv::Mat GetNormalizationMatrix(const std::vector<cv::Point2d>* points);
+
 	std::vector<cv::Mat> GetPairOfProjectionMatrices();
 	void SetKeyPoints(const std::vector<cv::KeyPoint>* kp1, const std::vector<cv::KeyPoint>* kp2);
 	void SetDescriptors(cv::InputArrayOfArrays d1, cv::InputArrayOfArrays d2);
 	void SetFeatures2DAlgorithm(const cv::Feature2D* alg);
 
 private:
+
+	// Encontra o centroide dos pontos.
+	cv::Point2d FindCentroid(const std::vector<cv::Point2d>* points);
+
+	// Encontra módulo médio em relação ao centroide
+	double FindMeanModuleAroundCentroid(const std::vector<cv::Point2d>* points, const cv::Point2d* centroid);
 
 	// Matrizes de projeção das duas câmeras. Dimensão 3x4.
 	cv::Mat p1;
@@ -53,12 +66,20 @@ private:
 	std::vector<cv::KeyPoint> kp1;
 	std::vector<cv::KeyPoint> kp2;
 
+	// Vetor com as correspondências entre as duas imagens. É um vetor bidimensional, 2xM, onde M é a quantidade de correspondências
+	// encontradas. corresp[0][j] e corresp[1][j] são pontos correspondentes.
+	std::vector<std::vector<cv::Point2d>> corresp;
+
 	// Epipolos.
 	cv::Point3d ep1;
 	cv::Point3d ep2;
 
 	// Algoritmo para realizar detecção de pontos de interesse e cálculo de descritores.
 	cv::Feature2D alg;
+
+	// Vetor com as imagens adicionadas via AddImage. No momento, só são armazenadas duas imagens. Mais adiante, poderão
+	// ser armazenadas mais imagens, de tal forma que todas elas contribuam com a reconstrução (bundle adjustment)
+	std::vector<cv::Mat> images;
 
 };
 
