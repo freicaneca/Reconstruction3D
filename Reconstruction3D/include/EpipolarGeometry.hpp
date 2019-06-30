@@ -34,12 +34,15 @@ public:
 
 	// Normalizacao: retorna homografia 3x3 que realiza normalização dos pontos de entrada. A normalização consiste na
 	// translação dos pontos ao redor da origem (centroide é o vetor nulo) e a distância média dos pontos à origem é sqrt(2).
-	cv::Mat GetNormalizationMatrix(const std::vector<cv::Point2d>* points);
+	cv::Mat CalculateNormalizationMatrix(const std::vector<cv::Point2d>* points);
+	//cv::Mat GetNormalizationMatrix();
+	void NormalizeCorrespondences();
 
 	std::vector<cv::Mat> GetPairOfProjectionMatrices();
 	void SetKeyPoints(const std::vector<cv::KeyPoint>* kp1, const std::vector<cv::KeyPoint>* kp2);
 	void SetDescriptors(cv::InputArrayOfArrays d1, cv::InputArrayOfArrays d2);
 	void SetFeatures2DAlgorithm(const cv::Feature2D* alg);
+	void AddCorrespondence(const cv::Point2d* p1, const cv::Point2d* p2);
 
 private:
 
@@ -62,6 +65,10 @@ private:
 	// Matriz fundamental. Dimensão 3x3.
 	cv::Mat f;
 
+	// Matrizes (homografia) de normalização. Uma para cada imagem. Dimensão 3x3.
+	cv::Mat nm1;
+	cv::Mat nm2;
+
 	// Vetores com os pontos de interesse das duas imagens
 	std::vector<cv::KeyPoint> kp1;
 	std::vector<cv::KeyPoint> kp2;
@@ -69,6 +76,7 @@ private:
 	// Vetor com as correspondências entre as duas imagens. É um vetor bidimensional, 2xM, onde M é a quantidade de correspondências
 	// encontradas. corresp[0][j] e corresp[1][j] são pontos correspondentes.
 	std::vector<std::vector<cv::Point2d>> corresp;
+	std::vector<std::vector<cv::Point2d>> normalizedCorresp;
 
 	// Epipolos.
 	cv::Point3d ep1;

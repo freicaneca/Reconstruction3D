@@ -19,7 +19,8 @@
 #include "opencv/cv.hpp"
 #include <vector>
 
-int main()
+//int main()
+int main_()
 {
 
 	std::cout << "Hello, fellow humans" << std::endl;
