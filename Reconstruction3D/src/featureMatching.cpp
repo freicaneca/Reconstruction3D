@@ -48,10 +48,7 @@ class FCalculator{
           points2.push_back( keypoints2[ matches[i].trainIdx ].pt );
         }
 
-        for( size_t i = 0; i < points1.size(); i++ )
-        {
-          printf("oi");
-        }
+
         Mat F;
 
 
@@ -61,19 +58,47 @@ class FCalculator{
         std::vector<cv::Vec<float,3>> epilines1, epilines2;
         std::vector<Point2f> newPoints1, newPoints2;
 
-        correctMatches(F,points1,points2,newPoints1,newPoints2);
-
-        computeCorrespondEpilines(newPoints1, 1, F, epilines1);
-        computeCorrespondEpilines(newPoints2, 2, F, epilines2);
-
         
 
 
 
+        computeCorrespondEpilines(points1, 1, F, epilines1);
+        computeCorrespondEpilines(points2, 2, F, epilines2);
+
+        Point2f epipole1,epipole2;
+
+        epipole1.x=(epilines1[0][1]*epilines1[1][2] - epilines1[0][2]*epilines1[1][1])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
+
+        epipole1.y=(epilines1[0][2]*epilines1[1][0] - epilines1[0][0]*epilines1[1][2])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
+        
+
+        epipole2.x=(epilines2[0][1]*epilines2[1][2] - epilines2[0][2]*epilines2[1][1])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
+
+        epipole2.y=(epilines2[0][2]*epilines2[1][0] - epilines2[0][0]*epilines2[1][2])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
 
 
 
+        
 
+        cv::Mat proj1 = (Mat_<double>(3,4) << 1, 0, 0, 0, 0, 1, 0, 0, 0,0,0,1,0);
+
+
+        cv::Mat epiCrossMat = (Mat_<double>(3,3) << 0,-1,epipole1.y,1,0,-epipole1.x,-epipole1.y,epipole1.x,0);
+
+        cv::Mat proj2;
+
+        cv:: Mat epiMat = (Mat_<double>(3,1) << epipole1.x,epipole1.y,epipole1.x,1);
+
+        cv:: Vec<float,3> points3d;
+        
+
+        cv::hconcat(epiCrossMat*F, epiMat, proj2);
+
+        
+
+        cv::triangulatePoints(proj1,proj2,points1,points2,points3d);
+
+        
 
 
 
@@ -104,6 +129,8 @@ int main()
   test.im2 = im2;
 
   test.extractAndMatch();
+
+  
 
 
    
