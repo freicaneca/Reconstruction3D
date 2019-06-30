@@ -44,7 +44,7 @@ all: Reconstruction3D
 Reconstruction3D: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L/home/CIN/fdbo/local/lib -o "Reconstruction3D" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -L/home/CIN/fdbo/local/lib -L/home/felipe/opencv-3.4.0/lib -o "Reconstruction3D" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
