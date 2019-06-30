@@ -1,7 +1,7 @@
-//#include <opencv2/opencv.hpp>
-#include "opencv/cv.hpp"
+#include <opencv2/opencv.hpp>
 #include "opencv2/xfeatures2d.hpp"
 #include "opencv2/features2d.hpp"
+#include <opencv2/sfm.hpp>
  
 using namespace std;
 using namespace cv;
@@ -49,10 +49,7 @@ class FCalculator{
           points2.push_back( keypoints2[ matches[i].trainIdx ].pt );
         }
 
-        for( size_t i = 0; i < points1.size(); i++ )
-        {
-          printf("oi");
-        }
+
         Mat F;
 
 
@@ -62,19 +59,71 @@ class FCalculator{
         std::vector<cv::Vec<float,3>> epilines1, epilines2;
         std::vector<Point2f> newPoints1, newPoints2;
 
-        correctMatches(F,points1,points2,newPoints1,newPoints2);
-
-        computeCorrespondEpilines(newPoints1, 1, F, epilines1);
-        computeCorrespondEpilines(newPoints2, 2, F, epilines2);
-
         
 
 
 
+        computeCorrespondEpilines(points1, 1, F, epilines1);
+        computeCorrespondEpilines(points2, 2, F, epilines2);
+
+        Point2f epipole1,epipole2;
+
+        epipole1.x=(epilines1[0][1]*epilines1[1][2] - epilines1[0][2]*epilines1[1][1])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
+
+        epipole1.y=(epilines1[0][2]*epilines1[1][0] - epilines1[0][0]*epilines1[1][2])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
+        
+
+        epipole2.x=(epilines2[0][1]*epilines2[1][2] - epilines2[0][2]*epilines2[1][1])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
+
+        epipole2.y=(epilines2[0][2]*epilines2[1][0] - epilines2[0][0]*epilines2[1][2])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
+
+
+
+        
+
+        cv::Mat proj1 = (Mat_<double>(3,4) << 1, 0, 0, 0, 0, 1, 0, 0, 0,0,1,0,0);
+
+
+        cv::Mat epiCrossMat = (Mat_<double>(3,3) << 0,-1,epipole1.y,1,0,-epipole1.x,-epipole1.y,epipole1.x,0);
+
+        cv::Mat proj2;
+
+        cv:: Mat epiMat = (Mat_<double>(3,1) << epipole1.x,epipole1.y,epipole1.x,1);
+
+
+
+        cv::hconcat(epiCrossMat*F, epiMat, proj2);
+
+
+    
+
+
+
+        Mat points3d;
+
+
+
+        int N=points1.size();
+
+        cv::Mat pnts3D(1,N,CV_64FC4);
+        cv::Mat cam0pnts(1,N,CV_64FC2);
+        cv::Mat cam1pnts(1,N,CV_64FC2);
+
+        cam0pnts = Mat(points1);
+        cam1pnts = Mat(points2);
+ 
+
+
+        cv::triangulatePoints(proj1,proj2,cam0pnts,cam1pnts,pnts3D);
+
+
+        cout<<pnts3D.cols;
 
 
 
 
+
+        
 
 
 
@@ -89,7 +138,7 @@ class FCalculator{
 };
  
  
-int main_featureMatching()
+int main()
 {
    
 
@@ -106,8 +155,10 @@ int main_featureMatching()
 
   test.extractAndMatch();
 
+  
 
-  return 0;
+
+   
 
    
 
