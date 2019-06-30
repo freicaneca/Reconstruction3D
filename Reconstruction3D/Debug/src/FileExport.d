@@ -1,5 +1,4 @@
-src/EpipolarGeometry.o: ../src/EpipolarGeometry.cpp \
- /media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/EpipolarGeometry.hpp \
+src/FileExport.o: ../src/FileExport.cpp \
  /home/felipe/opencv-3.4.0/include/opencv/cv.hpp \
  /home/felipe/opencv-3.4.0/include/opencv/cv.h \
  /home/felipe/opencv-3.4.0/include/opencv2/core/core_c.h \
@@ -55,10 +54,8 @@ src/EpipolarGeometry.o: ../src/EpipolarGeometry.cpp \
  /home/felipe/opencv-3.4.0/include/opencv2/calib3d/calib3d_c.h \
  /home/felipe/opencv-3.4.0/include/opencv2/objdetect.hpp \
  /home/felipe/opencv-3.4.0/include/opencv2/objdetect/detection_based_tracker.hpp \
- /home/felipe/opencv-3.4.0/include/opencv2/xfeatures2d.hpp \
- /home/felipe/opencv-3.4.0/include/opencv2/xfeatures2d/nonfree.hpp
-
-/media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/EpipolarGeometry.hpp:
+ /media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/FileExport.hpp \
+ /media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/EpipolarGeometry.hpp
 
 /home/felipe/opencv-3.4.0/include/opencv/cv.hpp:
 
@@ -170,6 +167,6 @@ src/EpipolarGeometry.o: ../src/EpipolarGeometry.cpp \
 
 /home/felipe/opencv-3.4.0/include/opencv2/objdetect/detection_based_tracker.hpp:
 
-/home/felipe/opencv-3.4.0/include/opencv2/xfeatures2d.hpp:
+/media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/FileExport.hpp:
 
-/home/felipe/opencv-3.4.0/include/opencv2/xfeatures2d/nonfree.hpp:
+/media/felipe/seagate_expansion/doutorado/faculdade/topicos_midia_interacao_1/projeto/eclipse/Reconstruction3D/include/EpipolarGeometry.hpp:

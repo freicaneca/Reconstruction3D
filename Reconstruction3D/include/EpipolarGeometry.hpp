@@ -43,6 +43,7 @@ public:
 	void SetDescriptors(cv::InputArrayOfArrays d1, cv::InputArrayOfArrays d2);
 	void SetFeatures2DAlgorithm(const cv::Feature2D* alg);
 	void AddCorrespondence(const cv::Point2d* p1, const cv::Point2d* p2);
+	void ComputeCorrespondencesFromImages(const std::string img1, const std::string img2);
 
 private:
 
