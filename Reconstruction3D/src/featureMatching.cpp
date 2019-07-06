@@ -66,16 +66,6 @@ class FCalculator{
         computeCorrespondEpilines(points1, 1, F, epilines1);
         computeCorrespondEpilines(points2, 2, F, epilines2);
 
-        Point2f epipole1,epipole2;
-
-        epipole1.x=(epilines1[0][1]*epilines1[1][2] - epilines1[0][2]*epilines1[1][1])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
-
-        epipole1.y=(epilines1[0][2]*epilines1[1][0] - epilines1[0][0]*epilines1[1][2])/(epilines1[0][0]*epilines1[1][1] - epilines1[0][1]*epilines1[1][0]);
-        
-
-        epipole2.x=(epilines2[0][1]*epilines2[1][2] - epilines2[0][2]*epilines2[1][1])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
-
-        epipole2.y=(epilines2[0][2]*epilines2[1][0] - epilines2[0][0]*epilines2[1][2])/(epilines2[0][0]*epilines2[1][1] - epilines2[0][1]*epilines2[1][0]);
 
 
 
@@ -84,16 +74,25 @@ class FCalculator{
         cv::Mat proj1 = (Mat_<double>(3,4) << 1, 0, 0, 0, 0, 1, 0, 0, 0,0,1,0,0);
 
 
-        cv::Mat epiCrossMat = (Mat_<double>(3,3) << 0,-1,epipole1.y,1,0,-epipole1.x,-epipole1.y,epipole1.x,0);
 
         cv::Mat proj2;
 
-        cv:: Mat epiMat = (Mat_<double>(3,1) << epipole1.x,epipole1.y,epipole1.x,1);
+
+        cv:: Mat K = (Mat_<double>(3,3) << 1, 0, 0, 0, 0, 1, 0, 0, 1);
 
 
+        cv:: Mat E = K.inv().t()*F*K.inv();
 
-        cv::hconcat(epiCrossMat*F, epiMat, proj2);
 
+        cv::Mat R1,R2,t;
+
+        decomposeEssentialMat(E, R1,  R2, t);
+
+        hconcat(R1,t,proj2);
+
+
+        proj1 = K*proj1;
+        proj2 = K*proj2;
 
     
 
@@ -117,7 +116,16 @@ class FCalculator{
         cv::triangulatePoints(proj1,proj2,cam0pnts,cam1pnts,pnts3D);
 
 
-        cout<<pnts3D.cols;
+
+
+
+
+
+
+
+        cout<<pnts3D.col(1);
+
+
 
 
 
