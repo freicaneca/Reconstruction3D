@@ -12,6 +12,7 @@
 #include <vector>
 #include <string>
 
-int export_to_file (std::vector<cv::Point3d> object, std::string filepath);
+int export_to_file (std::vector<cv::Point3d> &object, std::string filepath);
+int export_to_default_file (std::vector<cv::Point3d> &object);
 
 #endif /* INCLUDE_FILEEXPORT_HPP_ */

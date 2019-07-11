@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<meta charset="UTF-8"> 
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title></title>
+  </head>
+  <body>
+    <div id="options">
+      <h5>Rotação em 3 eixos</h5>
+      <div>
+        <label>Escolha o arquivo de configuração da câmera.</label>
+        <input type="file" id="cameraFile" disabled>
+      </div>
+      
+      <div>
+        <label>Escolha o arquivo de configuração da iluminação.</label>
+        <input type="file" id="lightFile" disabled />
+      </div>
+
+      <div>
+        <label>Escolha o arquivo de objeto.</label>
+        <input type="file" id="objectFile" disabled />
+      </div>
+      <button type="button" id="initialSteps" disabled="true">Carregar Parametros</button>
+      
+      <div class="tooltip">
+        <label>Ângulo:</label>
+        <input id="degrees" value=90></input>
+        <span class="tooltiptext">Ângulo em graus</span>
+      </div>
+
+      <div id="rotations">
+        <button type="button" id="ZH" disabled="true">Z, horário</button>
+        <button type="button" id="ZAH" disabled="true">Z, antihorário</button>
+        <button type="button" id="XH" disabled="true">X, horário</button>
+        <button type="button" id="XAH" disabled="true">X, antihorário</button>
+        <button type="button" id="YH" disabled="true">Y, horário</button>
+        <button type="button" id="YAH" disabled="true"> Y, antihorário</button>
+      </div>
+
+      <label>Rotações:</label>
+      <div id="rotateStack"></div>
+
+      <button type="button" id="rotate" disabled="true">EXECUTAR ROTAÇÕES</button>
+
+    </div>
+
+    <canvas id="canvas" width="2048" height="1536"></canvas>
+  </body>
+  
+  <script id="2d-vertex-shader" type="notjs">
+  attribute vec2 a_position;
+    
+  attribute vec3 a_normal, a_p;
+  varying vec3 v_normal, v_p;
+  
+  uniform vec2 u_resolution;
+
+  void main() {
+     v_normal = a_normal;
+     v_p = a_p;
+  
+     // convert the position from pixels to 0.0 to 1.0
+     vec2 zeroToOne = a_position.xy / u_resolution;
+
+     // convert from 0->1 to 0->2
+     vec2 zeroToTwo = zeroToOne * 2.0;
+
+     // convert from 0->2 to -1->+1 (clipspace)
+     vec2 clipSpace = zeroToTwo - 1.0;
+
+     gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+  }
+  </script>
+  <!-- fragment shader -->
+  <script id="2d-fragment-shader" type="notjs">
+  precision highp float;
+  varying vec3 v_normal, v_p;
+
+  uniform vec3 u_Pl, u_Ia, u_Od, u_Il;
+  uniform float u_ka, u_ks, u_kd, u_n;
+
+  void main() {
+  float watX = 30.0/4.0 * v_p.x/v_p.z;
+  float watY = 30.0/3.0 * v_p.y/v_p.z;
+  vec2 p2d = vec2((1.0 + watX) / 2.0, (1.0 - watY) / 2.0);
+    vec3 N = normalize(v_normal);
+    vec3 L = normalize(u_Pl - v_p);
+
+  vec3 V = normalize(-1.0 * v_p);
+  vec3 R = normalize(((dot(L, N) * 2.0) * N) - L);
+
+  float ka = u_ka;
+  float ks = u_ks;
+  float kd = u_kd;
+  float n = u_n;
+
+  if (dot(V,N) < 0.0) {
+    N = (-1.0 * N);
+  }
+  float cosLN = dot(L, N);
+  float cosRV = dot(R, V);
+
+  float compLN = float(cosLN >= 0.0);
+  ks = ks * compLN;		
+  kd = kd * compLN;
+
+  ks = ks * float(cosRV >= 0.0);	      
+
+  vec3 OdIl = u_Od * u_Il;
+  vec3 Iamb = u_Ia * ka;
+  vec3 Id = OdIl * (kd * cosLN);
+  // como, caso cosRV seja negativo, ks = 0, podemos fazer abs
+  // se nao desse estariamos fodidos pois pow eh indefinido pra negativo
+  vec3 Is = u_Il * (ks * pow(abs(cosRV), n));
+  vec3 I = Iamb + Is + Id;
+  // nao precisa de capar rgb, pois >1 eh 1
+  gl_FragColor = vec4(I.r/255.0, I.g/255.0, I.b/255.0, 1.0);		 
+  }
+  </script>
+  <script type="text/javascript" src="js/webgl-utils.js"></script>
+  <script type="text/javascript" src="js/leitor.js"></script>
+  <script type="text/javascript" src="js/vetor.js"></script>
+  <script type="text/javascript" src="js/ponto.js"></script>
+  <script type="text/javascript" src="js/triangulo.js"></script>
+  <script type="text/javascript" src="js/camera.js"></script>
+  <script type="text/javascript" src="js/matriz.js"></script>
+  <script type="text/javascript" src="js/ponto2d.js"></script>
+  <script type="text/javascript" src="js/script.js"></script>
+</html>
