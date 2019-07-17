@@ -28,7 +28,7 @@ EpipolarGeometry::EpipolarGeometry()
 	this->images = std::vector<cv::Mat>(2);
 
 	this->f = cv::Mat(3, 3, CV_64F, 0.0);
-	//this->nm = cv::Mat(3, 3, CV_64F, 0.0);
+
 }
 
 EpipolarGeometry::~EpipolarGeometry()
@@ -53,12 +53,7 @@ cv::Mat EpipolarGeometry::CalculateNormalizationMatrix(const std::vector<cv::Poi
 
 }
 
-/*
-cv::Mat EpipolarGeometry::GetNormalizationMatrix()
-{
-	return ;
-}
-*/
+
 
 cv::Point2d EpipolarGeometry::FindCentroid(const std::vector<cv::Point2d>* points)
 {
@@ -74,7 +69,7 @@ cv::Point2d EpipolarGeometry::FindCentroid(const std::vector<cv::Point2d>* point
 	cx /= points->size();
 	cy /= points->size();
 
-	//std::cout << "centroid " << cx << " " << cy << std::endl;
+	
 
 	return cv::Point2d(cx, cy);
 }
@@ -93,7 +88,6 @@ double EpipolarGeometry::FindMeanModuleAroundCentroid(const std::vector<cv::Poin
 
 	m /= points->size();
 
-	//std::cout << "mean module " << m << std::endl;
 
 	return m;
 }
@@ -125,13 +119,6 @@ void EpipolarGeometry::NormalizeCorrespondences()
 	cv::convertPointsFromHomogeneous(v1, this->normalizedCorresp[0]);
 	cv::convertPointsFromHomogeneous(v2, this->normalizedCorresp[1]);
 
-	/*
-	for (size_t i = 0; i < this->corresp[0].size(); i++)
-	{
-		std::cout << this->corresp[0][i] << std::endl;
-		std::cout << this->corresp[1][i] << std::endl;
-	}
-	*/
 
 }
 
@@ -176,8 +163,6 @@ void EpipolarGeometry::ComputeCorrespondencesFromImages(const std::string img1, 
 
 void EpipolarGeometry::CalculateFundamentalMatrix()
 {
-	// Este método não supõe que as correspondências estão normalizadas! Execute NormalizeCorrespondences se quiser
-	// normalizar (é recomendado!)
 	size_t qty_corresp = this->corresp[0].size();
 	cv::Mat A(qty_corresp, 9, CV_64F, 1);
 
@@ -227,122 +212,15 @@ void EpipolarGeometry::CalculateFundamentalMatrix()
 	// Denormalizando a matriz F
 	this->f = this->nm2.t() * this->f * this->nm1;
 
-	/*
-	std::cout << "printando matrizes fundamentais!!!" << std::endl;
-	std::cout << this->f << std::endl;
-
-	// Testando matriz fundamental do opencv
-	//cv::Mat f2 = cv::findFundamentalMat(this->corresp[0], this->corresp[1], CV_FM_8POINT);
-	cv::Mat f2 = cv::findFundamentalMat(this->corresp[0], this->corresp[1], CV_FM_8POINT);
-
-	std::cout << f2 << std::endl;
-
-	std::vector<cv::Point3d> tmp1;
-	std::vector<cv::Point3d> tmp2;
-
-	cv::convertPointsToHomogeneous(this->corresp[0], tmp1);
-	cv::convertPointsToHomogeneous(this->corresp[1], tmp2);
-
-	std::cout << "depois convert to homg" << std::endl;
-
-	// Teste de xt' F x = 0
-	for (size_t i = 0; i < qty_corresp; i++)
-	{
-		cv::Mat mtmp1 = cv::Mat(tmp1[i]);
-		//std::cout << "depois mtmp1" << std::endl;
-		cv::Mat mtmp2 = cv::Mat(tmp2[i]);
-		//std::cout << "depois mtmp2" << std::endl;
-		//std::cout << mtmp1 << std::endl;
-		//std::cout << mtmp2 << std::endl;
-
-		std::cout << mtmp2.t() * this->f * mtmp1 << std::endl;
-		std::cout << mtmp2.t() * f2 * mtmp1 << std::endl;
-	}
-
-	// Teste de epilinhas
-	cv::Mat epitmp;
-	cv::computeCorrespondEpilines(this->corresp[0], 1, this->f, epitmp);
-	//std::cout << epitmp << std::endl;
-	cv::computeCorrespondEpilines(this->corresp[0], 1, f2, epitmp);
-	//std::cout << epitmp << std::endl;
-
-	cv::computeCorrespondEpilines(this->corresp[1], 2, this->f, epitmp);
-	//std::cout << epitmp << std::endl;
-	cv::computeCorrespondEpilines(this->corresp[1], 2, f2, epitmp);
-	//std::cout << epitmp << std::endl;
-
-	//std::cout << tmp.at<double>(0) << " " << tmp.at<double>(1) << std::endl;
-	 */
 
 }
 
 // Teste de normalizacao
 int main()
-//int main_test()
 {
 
-	/*
-	std::vector<cv::Point2d> points1;
-	cv::Point2d p1(2, 2);
-	cv::Point2d p2(10, 10);
-	cv::Point2d p3(20, 20);
-	cv::Point2d p4(25, 25);
-	cv::Point2d p5(5, 5);
-	cv::Point2d p6(30, 30);
-	cv::Point2d p7(45, 45);
-	cv::Point2d p8(50, 80);
-	cv::Point2d p9(60, 20);
-	cv::Point2d p10(80, 10);
-	cv::Point2d p11(80, 50);
-	cv::Point2d p12(90, 25);
-
-	points1.push_back(p1);
-	points1.push_back(p2);
-	points1.push_back(p3);
-	points1.push_back(p4);
-	points1.push_back(p5);
-	points1.push_back(p6);
-	points1.push_back(p7);
-	points1.push_back(p8);
-	points1.push_back(p9);
-	points1.push_back(p10);
-	points1.push_back(p11);
-	points1.push_back(p12);
-
-	// Para teste, os pontos serão rotacionados e transladados por uma transformação conhecida.
-	// Translaçao de -10 em x, -10 em y e rotacao de 15 graus.
-	cv::Mat tr = cv::Mat(3, 3, CV_64F, 0.0);
-	double deg = 5.0;
-	double tx = -5;
-	double ty = -5;
-	tr.at<double>(0, 0) = cos(deg * PI / 180.0);
-	tr.at<double>(0, 1) = -sin(deg * PI / 180.0);
-	tr.at<double>(0, 2) = tx;
-	tr.at<double>(1, 0) = sin(deg * PI / 180.0);
-	tr.at<double>(1, 1) = cos(deg * PI / 180.0);
-	tr.at<double>(1, 2) = ty;
-	tr.at<double>(2, 2) = 1;
-
-	// Os pontos transformados estarão em points2.
-	std::vector<cv::Point2d> points2;
-	std::vector<cv::Point3d> tmp;
-	cv::transform(points1, tmp, tr);
-	cv::convertPointsHomogeneous(tmp, points2);
 
 
-	eg.AddCorrespondence(&p1, &(points2[0]));
-	eg.AddCorrespondence(&p2, &(points2[1]));
-	eg.AddCorrespondence(&p3, &(points2[2]));
-	eg.AddCorrespondence(&p4, &(points2[3]));
-	eg.AddCorrespondence(&p5, &(points2[4]));
-	eg.AddCorrespondence(&p6, &(points2[5]));
-	eg.AddCorrespondence(&p7, &(points2[6]));
-	eg.AddCorrespondence(&p8, &(points2[7]));
-	eg.AddCorrespondence(&p9, &(points2[8]));
-	eg.AddCorrespondence(&p10, &(points2[9]));
-	eg.AddCorrespondence(&p11, &(points2[10]));
-	eg.AddCorrespondence(&p12, &(points2[11]));
-	*/
 
 	EpipolarGeometry eg;
 

@@ -35,7 +35,7 @@ public:
 	// Normalizacao: retorna homografia 3x3 que realiza normalização dos pontos de entrada. A normalização consiste na
 	// translação dos pontos ao redor da origem (centroide é o vetor nulo) e a distância média dos pontos à origem é sqrt(2).
 	cv::Mat CalculateNormalizationMatrix(const std::vector<cv::Point2d>* points);
-	//cv::Mat GetNormalizationMatrix();
+
 	void NormalizeCorrespondences();
 
 	std::vector<cv::Mat> GetPairOfProjectionMatrices();

@@ -8,25 +8,15 @@ using namespace std;
 using namespace cv;
 using namespace cv::xfeatures2d;
 
-class FCalculator
-{
-
-	const int Max_feat = 1000;
-
-public:
-	Mat im1;
-	Mat im2;
-	void extractAndMatch()
+namespace calibrate{
+	
+	Mat calibrateCamera(int numCornersHor,int numCornersVer,string calibVideo)
 	{
-
-		int numBoards = 0;
-		int numCornersHor = 9;
-		int numCornersVer = 7;
 
 		int numSquares = numCornersHor * numCornersVer;
 		Size board_sz = Size(numCornersHor, numCornersVer);
 
-		VideoCapture capture = VideoCapture("video_calib.mp4");
+		VideoCapture capture = VideoCapture(calibVideo);
 
 		vector<vector<Point3f>> object_points;
 		vector<vector<Point2f>> image_points;
@@ -39,16 +29,19 @@ public:
 
 		Mat image;
 		int countdown = 0;
-
+		int numFrame = 0;
 
 
 		while (capture.isOpened())
 		{
-
+			numFrame++;
+			if(numFrame%10!=0)continue;
 
 			Mat gray_image;
 
 			capture >> image;
+
+			if(image.empty())break;
 
 
 
@@ -85,6 +78,9 @@ public:
 				object_points.push_back(obj);
 
 				countdown++;
+				if(countdown>10)break;
+
+
 			}
 		}
 
@@ -98,22 +94,26 @@ public:
 
 		calibrateCamera(object_points, image_points, image.size(), intrinsic, distCoeffs, rvecs, tvecs);
 
-		cout << intrinsic;
+		return intrinsic;
 	}
-};
+
+
+
+}
+
+
+
 
 int main()
 {
 
-	Mat im1, im2;
+	int numCornersHor = 9;
+	int numCornersVer = 7;
 
-	im1 = imread("odo1.jpg");
-	im2 = imread("odo2.jpg");
 
-	FCalculator test;
+	Mat K = calibrate::calibrateCamera(numCornersHor,numCornersVer,"video_calib.mp4");
 
-	test.im1 = im1;
-	test.im2 = im2;
+	cout<<K;
 
-	test.extractAndMatch();
+	
 }
